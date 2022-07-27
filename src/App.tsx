@@ -1,5 +1,16 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { SignIn } from './pages/index';
+
+import './assets/reset.css';
+
 function App() {
-	return <h1>Hello World!</h1>;
+	return (
+		<BrowserRouter>
+			<Routes>
+				<Route path='/' element={<SignIn />} />
+			</Routes>
+		</BrowserRouter>
+	);
 }
 
 export default App;
