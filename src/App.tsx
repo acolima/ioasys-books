@@ -1,15 +1,19 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { SignIn } from './pages/index';
+import { Books, SignIn } from './pages/index';
 
 import './assets/reset.css';
+import { AuthProvider } from './context/authContext';
 
 function App() {
 	return (
-		<BrowserRouter>
-			<Routes>
-				<Route path='/' element={<SignIn />} />
-			</Routes>
-		</BrowserRouter>
+		<AuthProvider>
+			<BrowserRouter>
+				<Routes>
+					<Route path='/' element={<SignIn />} />
+					<Route path='/books' element={<Books />} />
+				</Routes>
+			</BrowserRouter>
+		</AuthProvider>
 	);
 }
 

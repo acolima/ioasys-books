@@ -7,6 +7,10 @@ const Container = styled.div`
 	height: 100vh;
 
 	position: relative;
+
+	@media (max-width: 601px) {
+		background-position: -380px;
+	}
 `;
 
 const Form = styled.form`
@@ -21,16 +25,13 @@ const Form = styled.form`
 	height: 100vh;
 	width: 368px;
 
-	@media (max-width: 400px) {
+	@media (max-width: 601px) {
 		position: relative;
-
 		left: 0;
 
 		width: 90vw;
 
 		margin: 0 auto;
-
-		align-items: center;
 	}
 `;
 
@@ -93,4 +94,32 @@ const Button = styled.button`
 	text-align: center;
 `;
 
-export { Button, Container, Form, Input, InputContainer, Label };
+const Tooltip = styled.div`
+	width: 60%;
+
+	background: rgba(255, 255, 255, 0.4);
+
+	font-family: 'Heebo';
+	font-weight: 700;
+	font-size: 16px;
+	line-height: 16px;
+	color: #ffffff;
+	text-align: center;
+
+	padding: 10px;
+
+	position: relative;
+
+	::after {
+		content: '';
+		position: absolute;
+		top: -24px;
+		left: 20px;
+		margin: 10px;
+		border-width: 7px;
+		border-style: solid;
+		border-color: transparent transparent rgba(255, 255, 255, 0.4) transparent;
+	}
+`;
+
+export { Button, Container, Form, Input, InputContainer, Label, Tooltip };

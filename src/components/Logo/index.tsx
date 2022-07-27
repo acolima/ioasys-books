@@ -34,4 +34,8 @@ const Container = styled.div<Props>`
 	color: #ffffff;
 	${(props) => !props.loginPage && 'filter: invert(85%);'};
 	padding-bottom: 34px;
+
+	@media (max-width: 601px) {
+		width: 90vw;
+	}
 `;
