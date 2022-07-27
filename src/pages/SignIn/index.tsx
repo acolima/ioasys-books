@@ -65,7 +65,9 @@ function SignIn() {
 						onChange={(e) => setPassword(e.target.value)}
 					/>
 
-					<Button type='submit'>Entrar</Button>
+					<Button id='sign-in-button' type='submit'>
+						Entrar
+					</Button>
 				</InputContainer>
 
 				{errorMessage && <Tooltip>{errorMessage}</Tooltip>}
