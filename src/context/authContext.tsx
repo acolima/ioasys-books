@@ -4,6 +4,7 @@ interface IAuthContext {
 	data: AuthData | null;
 	token: string | null;
 	signIn: (authData: AuthData, token: string) => void;
+	signOut: () => void;
 }
 
 export const AuthContext = createContext<IAuthContext | null>(null);
@@ -32,8 +33,13 @@ export function AuthProvider({ children }: Props) {
 		localStorage.setItem('token', JSON.stringify(token));
 	}
 
+	function signOut() {
+		localStorage.removeItem('authData');
+		localStorage.removeItem('token');
+	}
+
 	return (
-		<AuthContext.Provider value={{ data, token, signIn }}>
+		<AuthContext.Provider value={{ data, token, signIn, signOut }}>
 			{children}
 		</AuthContext.Provider>
 	);
