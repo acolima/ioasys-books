@@ -18,26 +18,84 @@ import {
 } from './styles';
 
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
-import { toast } from 'react-toastify';
+import { useEffect, useState } from 'react';
+import { api } from '../../services/api';
+import { errorAlert } from '../../utils/toastAlerts';
+import MainPageSkeleton from '../../components/MainPageSkeleton';
+
+export interface IBook {
+	id: string;
+	title: string;
+	description: string;
+	authors: string[];
+	pageCount: string;
+	category: string;
+	imageUrl: string;
+	isbn10: string;
+	isbn13: string;
+	language: string;
+	publisher: string;
+	published: number;
+}
 
 function Main() {
-	const { data, signOut } = useAuth();
+	const { data, authorizationToken, refreshToken, setTokens, signOut } =
+		useAuth();
+
+	const [books, setBooks] = useState<IBook[] | null>(null);
+	const [numberOfPages, setNumberOfPages] = useState(0);
+	const [currentPage, setCurrentPage] = useState(1);
+
+	const [loading, setLoading] = useState(false);
 
 	let navigate = useNavigate();
 
+	const mobileWidth = window.screen.width < 600;
+
 	useEffect(() => {
 		if (!data) {
-			toast.error('Faça o login novamente', {
-				position: toast.POSITION.TOP_CENTER,
-			});
+			errorAlert('Faça o login novamente');
 			navigate('/');
 		}
-	}, []);
+		getBooks();
+	}, [currentPage]);
+
+	async function getBooks() {
+		setLoading(true);
+		try {
+			const response = await api.getBooks(authorizationToken!, currentPage);
+			setBooks(response.data);
+			setNumberOfPages(Math.ceil(response.totalPages));
+			setLoading(false);
+		} catch (error: any) {
+			errorAlert(error.response.data.errors.message);
+		}
+	}
 
 	function handleLogout() {
 		signOut();
 		navigate('/');
+	}
+
+	function handlePreviousPage() {
+		setCurrentPage(currentPage - 1);
+	}
+
+	function handleNextPage() {
+		setCurrentPage(currentPage + 1);
+	}
+
+	setInterval(() => {
+		handleRefreshToken();
+	}, 3600000);
+
+	async function handleRefreshToken() {
+		try {
+			const { aToken, rToken } = await api.refreshToken(refreshToken!);
+			setTokens(aToken, rToken);
+		} catch (error: any) {
+			errorAlert(error.response.data.errors.message);
+		}
 	}
 
 	return (
@@ -57,29 +115,44 @@ function Main() {
 				</div>
 			</Header>
 
-			<BooksContainer>
-				<Book />
-				<Book />
-				<Book />
-				<Book />
-				<Book />
-				<Book />
-				<Book />
-				<Book />
-				<Book />
-				<Book />
-				<Book />
-				<Book />
-			</BooksContainer>
+			{loading ? (
+				<MainPageSkeleton />
+			) : (
+				<BooksContainer>
+					{books?.map((book) => (
+						<Book key={book.id} book={book} />
+					))}
+				</BooksContainer>
+			)}
 
 			<Paging>
-				Página <span>1</span> de <span>100</span>
-				<Button>
-					<IoChevronBackSharp />
-				</Button>
-				<Button>
-					<IoChevronForwardSharp />
-				</Button>
+				{mobileWidth ? (
+					<>
+						<Button onClick={handlePreviousPage} disabled={currentPage === 1}>
+							<IoChevronBackSharp />
+						</Button>
+						Página <span>{currentPage}</span> de <span>{numberOfPages}</span>
+						<Button
+							onClick={handleNextPage}
+							disabled={currentPage + 1 > numberOfPages}
+						>
+							<IoChevronForwardSharp />
+						</Button>
+					</>
+				) : (
+					<>
+						Página <span>{currentPage}</span> de <span>{numberOfPages}</span>
+						<Button onClick={handlePreviousPage} disabled={currentPage === 1}>
+							<IoChevronBackSharp />
+						</Button>
+						<Button
+							onClick={handleNextPage}
+							disabled={currentPage + 1 > numberOfPages}
+						>
+							<IoChevronForwardSharp />
+						</Button>
+					</>
+				)}
 			</Paging>
 		</Container>
 	);

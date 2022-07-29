@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 
 const Container = styled.div`
-	width: 272px;
-	height: 160px;
+	max-width: 272px;
+	min-height: 160px;
 
 	box-shadow: 0px 6px 24px rgba(84, 16, 95, 0.13);
 	border-radius: 4px;
@@ -14,6 +14,18 @@ const Container = styled.div`
 	gap: 16px;
 
 	cursor: pointer;
+
+	@media (max-width: 1401px) {
+		width: 252px;
+	}
+
+	@media (max-width: 901px) {
+		width: 100%;
+	}
+
+	@media (max-width: 601px) {
+		min-width: 90%;
+	}
 `;
 
 const BookCover = styled.div`

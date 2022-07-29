@@ -6,24 +6,32 @@ import {
 	Container,
 } from './styles';
 
-function Book() {
+import { IBook } from '../../pages/Main';
+import defaultCover from '../../assets/images/defaultCover.png';
+
+interface Props {
+	book: IBook;
+}
+
+function Book({ book }: Props) {
+	const cover = book.imageUrl || defaultCover;
+
+	const authors = book.authors.join(', ');
+
 	return (
 		<Container>
 			<BookCover>
-				<img
-					src='https://d2drtqy2ezsot0.cloudfront.net/Book-0.jpg'
-					width={81}
-				/>
+				<img src={cover} alt={book.title} width={81} />
 			</BookCover>
 			<BookDetails>
 				<div>
-					<BookTitle>Crossing the Chasm</BookTitle>
-					<BookAuthor>Geoffrey A. Moore</BookAuthor>
+					<BookTitle>{book.title}</BookTitle>
+					<BookAuthor>{authors}</BookAuthor>
 				</div>
 				<div>
-					<p>150 páginas</p>
-					<p>Editora Loyola</p>
-					<p>Publicado em 2020</p>
+					<p>{book.pageCount} páginas</p>
+					<p>Editora {book.publisher}</p>
+					<p>Publicado em {book.published}</p>
 				</div>
 			</BookDetails>
 		</Container>

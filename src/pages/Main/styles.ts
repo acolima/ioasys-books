@@ -1,12 +1,16 @@
 import styled from 'styled-components';
 
+interface Props {
+	disabled?: boolean;
+}
+
 const Container = styled.div`
 	background-image: url('background2.png'), url('background1.png');
 	background-size: cover;
 	background-blend-mode: darken;
 
 	width: 100vw;
-	height: 100vh;
+	min-height: 100vh;
 `;
 
 const Header = styled.div`
@@ -38,9 +42,13 @@ const UserName = styled.h3`
 	span {
 		font-weight: 500;
 	}
+
+	@media (max-width: 601px) {
+		display: none;
+	}
 `;
 
-const Button = styled.button`
+const Button = styled.button<Props>`
 	width: 32px;
 	height: 32px;
 
@@ -53,6 +61,8 @@ const Button = styled.button`
 	justify-content: center;
 
 	cursor: pointer;
+
+	${(props) => props.disabled && 'color: #33333366 '}
 `;
 
 const BooksContainer = styled.div`
@@ -61,10 +71,28 @@ const BooksContainer = styled.div`
 	margin: 0 auto;
 
 	display: grid;
-	grid-template-columns: auto auto auto auto;
+	grid-template-columns: repeat(4, auto);
 	justify-content: space-between;
 
 	row-gap: 16px;
+
+	@media (max-width: 1201px) {
+		grid-template-columns: repeat(3, auto);
+	}
+
+	@media (max-width: 901px) {
+		width: 90%;
+		grid-template-columns: repeat(2, auto);
+		justify-content: space-around;
+	}
+
+	@media (max-width: 601px) {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		width: 100%;
+	}
 `;
 
 const Paging = styled.div`
@@ -83,10 +111,14 @@ const Paging = styled.div`
 
 	color: #333333;
 
-	padding-top: 10px;
+	padding: 10px 0;
 
 	span {
 		font-weight: 500;
+	}
+
+	@media (max-width: 601px) {
+		justify-content: center;
 	}
 `;
 
