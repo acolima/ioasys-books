@@ -11,15 +11,22 @@ import defaultCover from '../../assets/images/defaultCover.png';
 
 interface Props {
 	book: IBook;
+	setBook: React.Dispatch<React.SetStateAction<IBook | null>>;
+	setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function Book({ book }: Props) {
+function Book({ book, setBook, setOpenModal }: Props) {
 	const cover = book.imageUrl || defaultCover;
 
 	const authors = book.authors.join(', ');
 
+	function handleDisplayBook() {
+		setBook(book);
+		setOpenModal(true);
+	}
+
 	return (
-		<Container>
+		<Container onClick={handleDisplayBook}>
 			<BookCover>
 				<img src={cover} alt={book.title} width={81} />
 			</BookCover>

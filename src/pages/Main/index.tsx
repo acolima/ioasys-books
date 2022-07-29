@@ -22,6 +22,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../../services/api';
 import { errorAlert } from '../../utils/toastAlerts';
 import MainPageSkeleton from '../../components/MainPageSkeleton';
+import BookModal from '../../components/BookModal';
 
 export interface IBook {
 	id: string;
@@ -43,10 +44,12 @@ function Main() {
 		useAuth();
 
 	const [books, setBooks] = useState<IBook[] | null>(null);
+	const [book, setBook] = useState<IBook | null>(null);
 	const [numberOfPages, setNumberOfPages] = useState(0);
 	const [currentPage, setCurrentPage] = useState(1);
 
 	const [loading, setLoading] = useState(false);
+	const [openModal, setOpenModal] = useState(false);
 
 	let navigate = useNavigate();
 
@@ -87,7 +90,7 @@ function Main() {
 
 	setInterval(() => {
 		handleRefreshToken();
-	}, 3600000);
+	}, 3540000);
 
 	async function handleRefreshToken() {
 		try {
@@ -120,7 +123,12 @@ function Main() {
 			) : (
 				<BooksContainer>
 					{books?.map((book) => (
-						<Book key={book.id} book={book} />
+						<Book
+							key={book.id}
+							book={book}
+							setBook={setBook}
+							setOpenModal={setOpenModal}
+						/>
 					))}
 				</BooksContainer>
 			)}
@@ -154,6 +162,8 @@ function Main() {
 					</>
 				)}
 			</Paging>
+
+			{openModal && <BookModal book={book!} setOpenModal={setOpenModal} />}
 		</Container>
 	);
 }
