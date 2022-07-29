@@ -3,7 +3,8 @@ import { createContext, useState } from 'react';
 interface IAuthContext {
 	data: AuthData | null;
 	token: string | null;
-	signIn: (authData: AuthData, token: string) => void;
+	setLocalAuth: (authData: AuthData) => void;
+	setLocalToken: (token: string) => void;
 	signOut: () => void;
 }
 
@@ -22,15 +23,19 @@ interface AuthData {
 
 export function AuthProvider({ children }: Props) {
 	const persistedAuth: AuthData = JSON.parse(localStorage.getItem('authData')!);
+	const persistedToken: string = JSON.parse(localStorage.getItem('token')!);
 
 	const [data, setData] = useState<AuthData | null>(persistedAuth);
-	const [token, setToken] = useState<string | null>(null);
+	const [token, setToken] = useState<string | null>(persistedToken);
 
-	function signIn(authData: AuthData, token: string) {
+	function setLocalAuth(authData: AuthData) {
 		setData(authData);
-		setToken(token);
 		localStorage.setItem('authData', JSON.stringify(authData));
-		localStorage.setItem('token', JSON.stringify(token));
+	}
+
+	function setLocalToken(authToken: string) {
+		setToken(authToken);
+		localStorage.setItem('token', JSON.stringify(authToken));
 	}
 
 	function signOut() {
@@ -39,7 +44,9 @@ export function AuthProvider({ children }: Props) {
 	}
 
 	return (
-		<AuthContext.Provider value={{ data, token, signIn, signOut }}>
+		<AuthContext.Provider
+			value={{ data, token, setLocalAuth, setLocalToken, signOut }}
+		>
 			{children}
 		</AuthContext.Provider>
 	);

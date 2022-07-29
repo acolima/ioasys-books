@@ -18,13 +18,35 @@ import {
 } from './styles';
 
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { api } from '../../services/api';
+
+export interface IBook {
+	id: string;
+	title: string;
+	description: string;
+	authors: string[];
+	pageCount: string;
+	category: string;
+	imageUrl: string;
+	isbn10: string;
+	isbn13: string;
+	language: string;
+	publisher: string;
+	published: number;
+}
 
 function Main() {
-	const { data, signOut } = useAuth();
+	const { data, token, signOut } = useAuth();
+
+	const [books, setBooks] = useState<IBook[] | null>(null);
+	const [numberOfPages, setNumberOfPages] = useState(0);
+	const [currentPage, setCurrentPage] = useState(1);
 
 	let navigate = useNavigate();
+
+	const mobileWidth = window.screen.width < 600;
 
 	useEffect(() => {
 		if (!data) {
@@ -33,11 +55,32 @@ function Main() {
 			});
 			navigate('/');
 		}
-	}, []);
+		getBooks();
+	}, [currentPage]);
+
+	async function getBooks() {
+		try {
+			const response = await api.getBooks(token!, currentPage);
+			setBooks(response.data);
+			setNumberOfPages(Math.ceil(response.totalPages));
+		} catch (error: any) {
+			toast.error(error.response.data.errors.message, {
+				position: toast.POSITION.TOP_CENTER,
+			});
+		}
+	}
 
 	function handleLogout() {
 		signOut();
 		navigate('/');
+	}
+
+	function handlePreviousPage() {
+		setCurrentPage(currentPage - 1);
+	}
+
+	function handleNextPage() {
+		setCurrentPage(currentPage + 1);
 	}
 
 	return (
@@ -58,28 +101,39 @@ function Main() {
 			</Header>
 
 			<BooksContainer>
-				<Book />
-				<Book />
-				<Book />
-				<Book />
-				<Book />
-				<Book />
-				<Book />
-				<Book />
-				<Book />
-				<Book />
-				<Book />
-				<Book />
+				{books?.map((book) => (
+					<Book key={book.id} book={book} />
+				))}
 			</BooksContainer>
 
 			<Paging>
-				Página <span>1</span> de <span>100</span>
-				<Button>
-					<IoChevronBackSharp />
-				</Button>
-				<Button>
-					<IoChevronForwardSharp />
-				</Button>
+				{mobileWidth ? (
+					<>
+						<Button onClick={handlePreviousPage} disabled={currentPage === 1}>
+							<IoChevronBackSharp />
+						</Button>
+						Página <span>{currentPage}</span> de <span>{numberOfPages}</span>
+						<Button
+							onClick={handleNextPage}
+							disabled={currentPage + 1 > numberOfPages}
+						>
+							<IoChevronForwardSharp />
+						</Button>
+					</>
+				) : (
+					<>
+						Página <span>{currentPage}</span> de <span>{numberOfPages}</span>
+						<Button onClick={handlePreviousPage} disabled={currentPage === 1}>
+							<IoChevronBackSharp />
+						</Button>
+						<Button
+							onClick={handleNextPage}
+							disabled={currentPage + 1 > numberOfPages}
+						>
+							<IoChevronForwardSharp />
+						</Button>
+					</>
+				)}
 			</Paging>
 		</Container>
 	);

@@ -19,7 +19,7 @@ function SignIn() {
 	const [password, setPassword] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
 
-	const { signIn } = useAuth();
+	const { setLocalAuth, setLocalToken } = useAuth();
 
 	let navigate = useNavigate();
 
@@ -35,7 +35,8 @@ function SignIn() {
 				email,
 				password,
 			});
-			signIn(data, token);
+			setLocalAuth(data);
+			setLocalToken(token);
 			navigate('/books');
 		} catch (error: any) {
 			setErrorMessage(error.response.data.errors.message);

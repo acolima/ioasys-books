@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 const Container = styled.div`
 	background-image: url('login-background.png');
+  background-size: cover;
 
 	width: 100vw;
 	height: 100vh;
