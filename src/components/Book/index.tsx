@@ -16,6 +16,8 @@ interface Props {
 function Book({ book }: Props) {
 	const cover = book.imageUrl || defaultCover;
 
+	const authors = book.authors.join(', ');
+
 	return (
 		<Container>
 			<BookCover>
@@ -24,9 +26,7 @@ function Book({ book }: Props) {
 			<BookDetails>
 				<div>
 					<BookTitle>{book.title}</BookTitle>
-					{book.authors.map((author) => (
-						<BookAuthor key={author}>{author}</BookAuthor>
-					))}
+					<BookAuthor>{authors}</BookAuthor>
 				</div>
 				<div>
 					<p>{book.pageCount} páginas</p>

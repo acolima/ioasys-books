@@ -19,8 +19,9 @@ import {
 
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { toast } from 'react-toastify';
 import { api } from '../../services/api';
+import { errorAlert } from '../../utils/toastAlerts';
+import MainPageSkeleton from '../../components/MainPageSkeleton';
 
 export interface IBook {
 	id: string;
@@ -38,11 +39,14 @@ export interface IBook {
 }
 
 function Main() {
-	const { data, token, signOut } = useAuth();
+	const { data, authorizationToken, refreshToken, setTokens, signOut } =
+		useAuth();
 
 	const [books, setBooks] = useState<IBook[] | null>(null);
 	const [numberOfPages, setNumberOfPages] = useState(0);
 	const [currentPage, setCurrentPage] = useState(1);
+
+	const [loading, setLoading] = useState(false);
 
 	let navigate = useNavigate();
 
@@ -50,23 +54,21 @@ function Main() {
 
 	useEffect(() => {
 		if (!data) {
-			toast.error('Faça o login novamente', {
-				position: toast.POSITION.TOP_CENTER,
-			});
+			errorAlert('Faça o login novamente');
 			navigate('/');
 		}
 		getBooks();
 	}, [currentPage]);
 
 	async function getBooks() {
+		setLoading(true);
 		try {
-			const response = await api.getBooks(token!, currentPage);
+			const response = await api.getBooks(authorizationToken!, currentPage);
 			setBooks(response.data);
 			setNumberOfPages(Math.ceil(response.totalPages));
+			setLoading(false);
 		} catch (error: any) {
-			toast.error(error.response.data.errors.message, {
-				position: toast.POSITION.TOP_CENTER,
-			});
+			errorAlert(error.response.data.errors.message);
 		}
 	}
 
@@ -81,6 +83,19 @@ function Main() {
 
 	function handleNextPage() {
 		setCurrentPage(currentPage + 1);
+	}
+
+	setInterval(() => {
+		handleRefreshToken();
+	}, 3600000);
+
+	async function handleRefreshToken() {
+		try {
+			const { aToken, rToken } = await api.refreshToken(refreshToken!);
+			setTokens(aToken, rToken);
+		} catch (error: any) {
+			errorAlert(error.response.data.errors.message);
+		}
 	}
 
 	return (
@@ -100,11 +115,15 @@ function Main() {
 				</div>
 			</Header>
 
-			<BooksContainer>
-				{books?.map((book) => (
-					<Book key={book.id} book={book} />
-				))}
-			</BooksContainer>
+			{loading ? (
+				<MainPageSkeleton />
+			) : (
+				<BooksContainer>
+					{books?.map((book) => (
+						<Book key={book.id} book={book} />
+					))}
+				</BooksContainer>
+			)}
 
 			<Paging>
 				{mobileWidth ? (

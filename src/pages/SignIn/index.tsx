@@ -19,7 +19,7 @@ function SignIn() {
 	const [password, setPassword] = useState('');
 	const [errorMessage, setErrorMessage] = useState('');
 
-	const { setLocalAuth, setLocalToken } = useAuth();
+	const { setLocalAuth, setTokens } = useAuth();
 
 	let navigate = useNavigate();
 
@@ -31,12 +31,12 @@ function SignIn() {
 		e.preventDefault();
 
 		try {
-			const { data, token } = await api.signIn({
+			const { data, authorizationToken, refreshToken } = await api.signIn({
 				email,
 				password,
 			});
 			setLocalAuth(data);
-			setLocalToken(token);
+			setTokens(authorizationToken, refreshToken);
 			navigate('/books');
 		} catch (error: any) {
 			setErrorMessage(error.response.data.errors.message);

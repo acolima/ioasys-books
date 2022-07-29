@@ -16,7 +16,11 @@ function createConfig(token: string | undefined) {
 async function signIn(body: SignInData) {
 	const response = await axios.post(`${BASE_URL}/auth/sign-in`, body);
 
-	return { data: response.data, token: response.headers['authorization'] };
+	return {
+		data: response.data,
+		authorizationToken: response.headers['authorization'],
+		refreshToken: response.headers['refresh-token'],
+	};
 }
 
 async function getBooks(token: string, page: number) {
@@ -30,7 +34,19 @@ async function getBooks(token: string, page: number) {
 	return response.data;
 }
 
+async function refreshToken(token: string) {
+	const response = await axios.post(`${BASE_URL}/auth/refresh-token`, {
+		refreshToken: token,
+	});
+
+	return {
+		aToken: response.headers['authorization'],
+		rToken: response.headers['refresh-token'],
+	};
+}
+
 export const api = {
 	getBooks,
 	signIn,
+	refreshToken,
 };
