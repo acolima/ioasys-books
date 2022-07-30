@@ -75,8 +75,10 @@ const BookCover = styled.div`
 
 	filter: drop-shadow(0px 12px 18px rgba(0, 0, 0, 0.3));
 
+	padding: 5px 0;
+
 	img {
-		width: 55%;
+		width: 50%;
 	}
 `;
 

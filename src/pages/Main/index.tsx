@@ -61,7 +61,7 @@ function Main() {
 			navigate('/');
 		}
 		getBooks();
-	}, [currentPage]);
+	}, [currentPage, authorizationToken]);
 
 	async function getBooks() {
 		setLoading(true);
