@@ -11,7 +11,7 @@ const Backdrop = styled.div`
 	backdrop-filter: blur(2px);
 
 	display: flex;
-	gap: 20px;
+	gap: 5px;
 	flex-direction: column;
 	align-items: center;
 
@@ -91,6 +91,10 @@ const BookDetails = styled.div`
 	color: #333333;
 
 	width: 100%;
+
+	@media (max-width: 728px) {
+		padding: 12px 48px;
+	}
 `;
 
 const BookTitle = styled.h1`
