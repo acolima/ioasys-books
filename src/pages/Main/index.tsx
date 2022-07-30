@@ -58,7 +58,7 @@ function Main() {
 	useEffect(() => {
 		if (!data) {
 			errorAlert('Faça o login novamente');
-			navigate('/');
+			handleLogout();
 		}
 		getBooks();
 	}, [currentPage, authorizationToken]);
@@ -70,8 +70,8 @@ function Main() {
 			setBooks(response.data);
 			setNumberOfPages(Math.ceil(response.totalPages));
 			setLoading(false);
-		} catch (error: any) {
-			errorAlert(error.response.data.errors.message);
+		} catch (error) {
+			handleLogout();
 		}
 	}
 
