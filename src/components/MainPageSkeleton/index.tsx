@@ -6,7 +6,7 @@ function MainPageSkeleton() {
 	return (
 		<Skeleton>
 			{booksSkeleton.map((book) => (
-				<Book />
+				<Book key={book} />
 			))}
 		</Skeleton>
 	);

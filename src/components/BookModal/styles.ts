@@ -4,15 +4,16 @@ const Backdrop = styled.div`
 	width: 100vw;
 	height: 100vh;
 
-	position: absolute;
+	position: fixed;
 	top: 0;
 
 	background: rgba(0, 0, 0, 0.4);
 	backdrop-filter: blur(2px);
 
 	display: flex;
+	gap: 20px;
+	flex-direction: column;
 	align-items: center;
-	justify-content: center;
 
 	@media (max-width: 601px) {
 		flex-direction: column;
@@ -22,24 +23,28 @@ const Backdrop = styled.div`
 	}
 `;
 
-const CloseButton = styled.button`
-	width: 32px;
-	height: 32px;
-
-	position: absolute;
-	right: 20px;
-	top: 20px;
-
-	border-radius: 50%;
-	border: 1px solid rgba(51, 51, 51, 0.2);
+const CloseButton = styled.div`
+	width: 100%;
 
 	display: flex;
-	justify-content: center;
+	justify-content: flex-end;
 	align-items: center;
 
-	background: #ffffff;
+	padding: 20px;
 
-	cursor: pointer;
+	button {
+		width: 32px;
+		height: 32px;
+
+		border-radius: 50%;
+		border: 1px solid rgba(51, 51, 51, 0.2);
+
+		text-align: center;
+
+		background: #ffffff;
+
+		cursor: pointer;
+	}
 `;
 
 const Container = styled.div`
@@ -53,11 +58,8 @@ const Container = styled.div`
 
 	width: 90vw;
 
-	margin-top: 70px;
-
-	@media (min-width: 601px) {
-		width: 900px;
-		min-height: 650px;
+	@media (min-width: 728px) {
+		width: 90%;
 
 		flex-direction: row;
 	}
@@ -74,11 +76,7 @@ const BookCover = styled.div`
 	filter: drop-shadow(0px 12px 18px rgba(0, 0, 0, 0.3));
 
 	img {
-		width: 349px;
-
-		@media (max-width: 601px) {
-			width: 50%;
-		}
+		width: 55%;
 	}
 `;
 
@@ -115,6 +113,10 @@ const Label = styled.h2`
 	color: #333333;
 
 	margin-top: 32px;
+
+	@media (max-width: 601px) {
+		margin-top: 5px;
+	}
 `;
 
 const Details = styled.div`
@@ -147,8 +149,6 @@ const BookDescription = styled.p`
 	line-height: 20px;
 
 	color: #999;
-
-	margin-bottom: 10px;
 `;
 
 export {

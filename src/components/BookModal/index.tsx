@@ -29,8 +29,10 @@ function BookModal({ book, setOpenModal }: Props) {
 
 	return (
 		<Backdrop>
-			<CloseButton onClick={() => setOpenModal(false)}>
-				<IoCloseOutline fontSize='25px' />
+			<CloseButton>
+				<button onClick={() => setOpenModal(false)}>
+					<IoCloseOutline fontSize='25px' />
+				</button>
 			</CloseButton>
 
 			<Container>
